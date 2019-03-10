@@ -3,6 +3,7 @@ package com.tsovedenski.flickrgallery.features.photoslist
 import androidx.lifecycle.Observer
 import com.tsovedenski.flickrgallery.common.Try
 import com.tsovedenski.flickrgallery.domain.FlickrService
+import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 import com.tsovedenski.flickrgallery.features.common.Presenter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,8 +32,8 @@ class PhotosListPresenter (
         PhotosListEvent.OnStart -> onStart()
         PhotosListEvent.OnResume -> onResume()
         PhotosListEvent.OnDestroy -> onDestroy()
-        PhotosListEvent.ChangeViewToGridLayout -> changeViewToGrid()
-        PhotosListEvent.ChangeViewToCardLayout -> changeViewToCard()
+        PhotosListEvent.ChangeViewToGridLayout -> changeViewType(ViewType.Grid)
+        PhotosListEvent.ChangeViewToCardLayout -> changeViewType(ViewType.Card)
     }
 
     private fun onStart() {
@@ -42,7 +43,11 @@ class PhotosListPresenter (
     }
 
     private fun onResume() {
-        loadPhotos()
+        restore()
+
+        if (!model.isLoaded()) {
+            loadPhotos()
+        }
     }
 
     private fun onDestroy() {
@@ -52,31 +57,29 @@ class PhotosListPresenter (
     private fun loadPhotos() = launch {
         val result = Try(service::getPhotos)
 
-        println(result)
-
         result.fold(
             left = { println("TODO: Error") },
             right = {
-                model.setPhotos(it)
-                adapter.submitList(it)
-                adapter.notifyDataSetChanged()
-//                changeViewToCard()
-                changeViewToGrid()
+                model.setLoaded(true)
+                setPhotos(it)
             }
         )
     }
 
-    private fun changeViewToGrid() {
-        view.setViewType(ViewType.Grid)
-        model.setViewType(ViewType.Grid)
-        adapter.viewType = ViewType.Grid
+    private fun setPhotos(list: List<FlickrPhoto>) {
+        model.setPhotos(list)
+        adapter.submitList(list)
+    }
+
+    private fun changeViewType(type: ViewType) {
+        view.setViewType(type)
+        model.setViewType(type)
+        adapter.viewType = type
         adapter.notifyDataSetChanged()
     }
 
-    private fun changeViewToCard() {
-        view.setViewType(ViewType.Card)
-        model.setViewType(ViewType.Card)
-        adapter.viewType = ViewType.Card
-        adapter.notifyDataSetChanged()
+    private fun restore() {
+        setPhotos(model.getPhotos())
+        changeViewType(model.getViewType())
     }
 }

@@ -15,6 +15,8 @@ interface PhotosListContract {
     }
 
     interface ViewModel {
+        fun isLoaded(): Boolean
+        fun setLoaded(value: Boolean)
         fun getPhotos(): List<FlickrPhoto>
         fun setPhotos(list: List<FlickrPhoto>)
         fun getViewType(): ViewType
