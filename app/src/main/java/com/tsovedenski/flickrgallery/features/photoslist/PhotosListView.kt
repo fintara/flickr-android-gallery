@@ -1,9 +1,7 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,17 +19,17 @@ class PhotosListView : Fragment(), PhotosListContract.View {
 
     private val event = MutableLiveData<PhotosListEvent>()
 
-    private lateinit var photosList: RecyclerView
+    private lateinit var photosListView: RecyclerView
 
     override fun setObserver(observer: Observer<PhotosListEvent>)
             = event.observeForever(observer)
 
     override fun setAdapter(adapter: ListAdapter<FlickrPhoto, PhotosListAdapter.PhotoViewHolder>) {
-        photosList.adapter = adapter
+        photosListView.adapter = adapter
     }
 
     override fun setViewType(type: ViewType) {
-        photosList.layoutManager = when (type) {
+        photosListView.layoutManager = when (type) {
             ViewType.Grid -> GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
             ViewType.Card -> LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         }
@@ -55,14 +53,31 @@ class PhotosListView : Fragment(), PhotosListContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_photos_list, container, false)
 
-        photosList = view.findViewById(R.id.photos_list)
+        photosListView = view.findViewById(R.id.photos_list)
 
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         event.value = PhotosListEvent.OnStart
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.photos_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.viewtype_grid -> { event.value = PhotosListEvent.ChangeViewToGridLayout; true }
+            R.id.viewtype_card -> { event.value = PhotosListEvent.ChangeViewToCardLayout; true }
+            else -> false
+        }
     }
 
     companion object {
