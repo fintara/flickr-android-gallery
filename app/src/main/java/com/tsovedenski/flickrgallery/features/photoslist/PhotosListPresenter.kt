@@ -1,12 +1,12 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
 import androidx.lifecycle.Observer
+import com.tsovedenski.flickrgallery.common.CoroutineContextProvider
 import com.tsovedenski.flickrgallery.common.Try
 import com.tsovedenski.flickrgallery.domain.FlickrService
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 import com.tsovedenski.flickrgallery.features.common.Presenter
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -17,12 +17,13 @@ class PhotosListPresenter (
     private val view: PhotosListContract.View,
     private val model: PhotosListContract.ViewModel,
     private val service: FlickrService,
-    private val adapter: PhotosListAdapter
+    private val adapter: PhotosListAdapter,
+    private val contextProvider: CoroutineContextProvider
 ) : Presenter(),
     CoroutineScope,
     Observer<PhotosListEvent>
 {
-    override val coroutineContext get() = Dispatchers.Main + job
+    override val coroutineContext get() = contextProvider.provide() + job
 
     init {
         job = Job()

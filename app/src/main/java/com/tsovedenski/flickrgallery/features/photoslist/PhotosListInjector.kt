@@ -3,6 +3,7 @@ package com.tsovedenski.flickrgallery.features.photoslist
 import android.app.Application
 import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.tsovedenski.flickrgallery.common.CoroutineContextProviderImpl
 import com.tsovedenski.flickrgallery.domain.FlickrApi
 import com.tsovedenski.flickrgallery.domain.FlickrService
 import retrofit2.Retrofit
@@ -33,7 +34,8 @@ class PhotosListInjector (
             view,
             ViewModelProviders.of(view).get(PhotosListViewModel::class.java),
             flickrService,
-            PhotosListAdapter(application)
+            PhotosListAdapter(application),
+            CoroutineContextProviderImpl
         )
         view.setObserver(presenter)
         return presenter
