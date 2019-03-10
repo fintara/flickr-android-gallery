@@ -25,20 +25,34 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.android.support:appcompat-v7:28.0.0"
-    implementation "com.android.support:recyclerview-v7:28.0.0"
-    implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation "com.android.support.constraint:constraint-layout:1.1.3"
-    implementation "com.squareup.retrofit2:converter-gson:2.5.0"
-    implementation "com.google.code.gson:gson:2.8.2"
-    implementation "com.squareup.retrofit2:retrofit:2.5.0"
-    implementation "com.google.dagger:dagger:2.21"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.7"
-    kapt "com.google.dagger:dagger-compiler:2.21"
-    implementation "com.android.support:support-v4:28.0.0"
-    implementation "javax.inject:javax.inject:1"
-    testImplementation "junit:junit:4.12"
-    androidTestImplementation "com.android.support.test:runner:1.0.2"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutine"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlin_coroutine"
+
+    implementation "androidx.appcompat:appcompat:$versions.androidx_appcompat"
+    implementation "androidx.recyclerview:recyclerview:$versions.androidx_recyclerview"
+    implementation "androidx.cardview:cardview:$versions.androidx_cardview"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.androidx_constraintlayout"
+
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.androidx_lifecycle"
+    implementation "androidx.fragment:fragment:$versions.androidx_fragment"
+    implementation "androidx.fragment:fragment-ktx:$versions.androidx_fragment"
+
+//    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+//    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    kapt "com.github.bumptech.glide:compiler:$versions.glide"
+
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$versions.retrofit_adapter"
+
+//    implementation "com.google.dagger:dagger:$versions.dagger"
+//    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "com.android.support.test:runner:$versions.support_test"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
 }

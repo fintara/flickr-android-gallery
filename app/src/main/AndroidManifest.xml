@@ -2,21 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools" package="com.tsovedenski.flickrgallery">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
             android:name=".FlickrApplication"
             android:allowBackup="true"
+            android:fullBackupContent="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
-        <activity
-                android:name=".ui.FullscreenActivity"
-                android:configChanges="orientation|keyboardHidden|screenSize"
-                android:label="@string/title_activity_fullscreen"
-                android:theme="@style/FullscreenTheme">
-        </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name="com.tsovedenski.flickrgallery.features.photoslist.PhotosListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
