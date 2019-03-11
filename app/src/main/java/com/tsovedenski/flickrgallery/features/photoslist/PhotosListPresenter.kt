@@ -22,6 +22,7 @@ class PhotosListPresenter (
         PhotosListEvent.OnStart -> onStart()
         PhotosListEvent.OnResume -> onResume()
         PhotosListEvent.OnDestroy -> onDestroy()
+        PhotosListEvent.OnRefresh -> onRefresh()
         PhotosListEvent.ChangeViewToGridLayout -> changeViewType(ViewType.Grid)
         PhotosListEvent.ChangeViewToCardLayout -> changeViewType(ViewType.Card)
         is PhotosListEvent.OnPhotoSelected -> onPhotoSelected(e.position)
@@ -56,6 +57,10 @@ class PhotosListPresenter (
     private fun setPhotos(list: List<FlickrPhoto>) {
         model.setPhotos(list)
         adapter.submitList(list)
+    }
+
+    private fun onRefresh() {
+        loadPhotos()
     }
 
     private fun changeViewType(type: ViewType) {

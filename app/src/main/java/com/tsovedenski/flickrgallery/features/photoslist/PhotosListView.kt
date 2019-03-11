@@ -109,6 +109,7 @@ class PhotosListView : Fragment(), PhotosListContract.View {
         return when (item.itemId) {
             R.id.viewtype_grid -> { event.value = PhotosListEvent.ChangeViewToGridLayout; true }
             R.id.viewtype_card -> { event.value = PhotosListEvent.ChangeViewToCardLayout; true }
+            R.id.refresh -> { event.value = PhotosListEvent.OnRefresh; true }
             else -> false
         }
     }

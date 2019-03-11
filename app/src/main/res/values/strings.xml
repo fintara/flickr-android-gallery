@@ -6,4 +6,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_viewer">ViewerActivity</string>
+    <string name="refresh">Refresh</string>
+    <string name="as_grid">As grid</string>
+    <string name="as_cards">As cards</string>
 </resources>
