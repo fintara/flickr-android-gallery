@@ -12,6 +12,7 @@ interface PhotosListContract {
         fun setObserver(observer: Observer<PhotosListEvent>)
         fun setAdapter(adapter: ListAdapter<FlickrPhoto, PhotosListAdapter.PhotoViewHolder>)
         fun setViewType(type: ViewType)
+        fun restoreScrollPosition()
         fun openViewer(photos: List<FlickrPhoto>, position: Int)
     }
 

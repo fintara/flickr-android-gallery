@@ -2,6 +2,7 @@ package com.tsovedenski.flickrgallery.features.photoslist
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -37,12 +38,19 @@ class PhotosListView : Fragment(), PhotosListContract.View {
 
     override fun setAdapter(adapter: ListAdapter<FlickrPhoto, PhotosListAdapter.PhotoViewHolder>) {
         photosListView.adapter = adapter
+
     }
 
     override fun setViewType(type: ViewType) {
         photosListView.layoutManager = when (type) {
             ViewType.Grid -> gridLayoutManager
             ViewType.Card -> cardLayoutManager
+        }
+    }
+
+    override fun restoreScrollPosition() {
+        if (layoutManagerState != null) {
+            photosListView.layoutManager?.onRestoreInstanceState(layoutManagerState)
         }
     }
 
@@ -63,6 +71,11 @@ class PhotosListView : Fragment(), PhotosListContract.View {
     override fun onResume() {
         super.onResume()
         event.value = PhotosListEvent.OnResume
+    }
+
+    override fun onPause() {
+        layoutManagerState = photosListView.layoutManager?.onSaveInstanceState()
+        super.onPause()
     }
 
     override fun onDestroy() {
@@ -102,5 +115,7 @@ class PhotosListView : Fragment(), PhotosListContract.View {
 
     companion object {
         fun newInstance() = PhotosListView()
+
+        private var layoutManagerState: Parcelable? = null
     }
 }

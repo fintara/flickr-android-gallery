@@ -75,5 +75,6 @@ class PhotosListPresenter (
     private fun restore() {
         setPhotos(model.getPhotos())
         changeViewType(model.getViewType())
+        view.restoreScrollPosition()
     }
 }
