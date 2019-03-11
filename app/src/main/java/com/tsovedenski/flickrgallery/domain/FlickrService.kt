@@ -14,15 +14,15 @@ class FlickrService (
     private val format = SimpleDateFormat("dd MMMM YYYY, HH:mm", Locale.ENGLISH)
 
     suspend fun getPhotos(): List<FlickrPhoto> {
-        val response = api.getPublicFeedAsync().await()
-        return response.items.map { FlickrPhoto(
-            title = with(it.title.trim()) { if (isBlank()) "Untitled" else this },
-            date = format.format(sourceFormat.parse(it.published)),
-            tags = it.tags.trim(),
-            thumbUrl = it.media.toSmall().value,
-            imageUrl = it.media.toLarge().value
-        ) }
-//        return dummyData
+//        val response = api.getPublicFeedAsync().await()
+//        return response.items.map { FlickrPhoto(
+//            title = with(it.title.trim()) { if (isBlank()) "Untitled" else this },
+//            date = format.format(sourceFormat.parse(it.published)),
+//            tags = it.tags.trim(),
+//            thumbUrl = it.media.toSmall().value,
+//            imageUrl = it.media.toLarge().value
+//        ) }
+        return dummyData
     }
 
     private val dummyData = listOf(

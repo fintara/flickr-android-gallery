@@ -7,6 +7,7 @@ sealed class PhotosListEvent {
     object OnStart : PhotosListEvent()
     object OnResume : PhotosListEvent()
     object OnDestroy : PhotosListEvent()
+    data class OnPhotoSelected(val position: Int) : PhotosListEvent()
     object ChangeViewToGridLayout : PhotosListEvent()
     object ChangeViewToCardLayout : PhotosListEvent()
 }

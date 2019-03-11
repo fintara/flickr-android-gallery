@@ -11,9 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.tsovedenski.flickrgallery.GlideApp
 import com.tsovedenski.flickrgallery.R
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
+
 
 /**
  * Created by Tsvetan Ovedenski on 10/03/19.
@@ -41,17 +42,35 @@ class PhotosListAdapter (
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bindTo(item, context)
+        holder.bindTo(item, position, event, context)
     }
 
     sealed class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        abstract fun bindTo(item: FlickrPhoto, context: Context)
+        abstract fun bindTo(
+            item: FlickrPhoto,
+            position: Int,
+            event: MutableLiveData<PhotosListEvent>,
+            context: Context
+        )
+
+        protected fun ImageView.load(url: String, context: Context) = GlideApp
+            .with(context)
+            .load(url)
+            .into(this)
 
         class GridViewHolder(view: View) : PhotoViewHolder(view) {
             private val image: ImageView = view.findViewById(R.id.imageView)
 
-            override fun bindTo(item: FlickrPhoto, context: Context) {
-                Glide.with(context).load(item.thumbUrl).into(image)
+            override fun bindTo(
+                item: FlickrPhoto,
+                position: Int,
+                event: MutableLiveData<PhotosListEvent>,
+                context: Context
+            ) {
+                image.load(item.thumbUrl, context)
+                image.setOnClickListener {
+                    event.value = PhotosListEvent.OnPhotoSelected(position)
+                }
             }
         }
 
@@ -61,11 +80,19 @@ class PhotosListAdapter (
             private val date: TextView = view.findViewById(R.id.imageDate)
             private val tags: TextView = view.findViewById(R.id.imageTags)
 
-            override fun bindTo(item: FlickrPhoto, context: Context) {
-                Glide.with(context).load(item.thumbUrl).into(image)
+            override fun bindTo(
+                item: FlickrPhoto,
+                position: Int,
+                event: MutableLiveData<PhotosListEvent>,
+                context: Context
+            ) {
                 title.text = item.title
                 date.text = item.date
                 tags.text = item.tags
+                image.load(item.thumbUrl, context)
+                image.setOnClickListener {
+                    event.value = PhotosListEvent.OnPhotoSelected(position)
+                }
             }
         }
     }

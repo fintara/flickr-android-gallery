@@ -1,13 +1,10 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
-import androidx.lifecycle.Observer
 import com.tsovedenski.flickrgallery.common.CoroutineContextProvider
 import com.tsovedenski.flickrgallery.common.Try
 import com.tsovedenski.flickrgallery.domain.FlickrService
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 import com.tsovedenski.flickrgallery.features.common.Presenter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -18,23 +15,16 @@ class PhotosListPresenter (
     private val model: PhotosListContract.ViewModel,
     private val service: FlickrService,
     private val adapter: PhotosListAdapter,
-    private val contextProvider: CoroutineContextProvider
-) : Presenter(),
-    CoroutineScope,
-    Observer<PhotosListEvent>
+    contextProvider: CoroutineContextProvider
+) : Presenter<PhotosListEvent>(contextProvider)
 {
-    override val coroutineContext get() = contextProvider.provide() + job
-
-    init {
-        job = Job()
-    }
-
-    override fun onChanged(t: PhotosListEvent) = when (t) {
+    override fun onChanged(e: PhotosListEvent) = when (e) {
         PhotosListEvent.OnStart -> onStart()
         PhotosListEvent.OnResume -> onResume()
         PhotosListEvent.OnDestroy -> onDestroy()
         PhotosListEvent.ChangeViewToGridLayout -> changeViewType(ViewType.Grid)
         PhotosListEvent.ChangeViewToCardLayout -> changeViewType(ViewType.Card)
+        is PhotosListEvent.OnPhotoSelected -> onPhotoSelected(e.position)
     }
 
     private fun onStart() {
@@ -49,10 +39,6 @@ class PhotosListPresenter (
         if (!model.isLoaded()) {
             loadPhotos()
         }
-    }
-
-    private fun onDestroy() {
-        job.cancel()
     }
 
     private fun loadPhotos() = launch {
@@ -77,6 +63,13 @@ class PhotosListPresenter (
         model.setViewType(type)
         adapter.viewType = type
         adapter.notifyDataSetChanged()
+    }
+
+    private fun onPhotoSelected(position: Int) {
+        view.openViewer(
+            model.getPhotos(),
+            position
+        )
     }
 
     private fun restore() {

@@ -3,6 +3,7 @@ package com.tsovedenski.flickrgallery.features.photoslist
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.tsovedenski.flickrgallery.R
+import com.tsovedenski.flickrgallery.setFragment
 
 class PhotosListActivity : AppCompatActivity() {
 
@@ -15,9 +16,7 @@ class PhotosListActivity : AppCompatActivity() {
         val fragment = supportFragmentManager.findFragmentByTag(fragmentTag) as? PhotosListView
             ?: PhotosListView.newInstance()
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.photos_list_container, fragment, fragmentTag)
-            .commitNowAllowingStateLoss()
+        setFragment(fragment, fragmentTag, R.id.photos_list_container)
 
         PhotosListInjector(application).attachPresenter(fragment)
     }

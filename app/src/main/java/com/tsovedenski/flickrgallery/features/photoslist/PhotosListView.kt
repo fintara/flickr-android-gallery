@@ -1,5 +1,6 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.tsovedenski.flickrgallery.R
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
+import com.tsovedenski.flickrgallery.features.viewer.ViewerActivity
 
 /**
  * Created by Tsvetan Ovedenski on 10/03/19.
@@ -21,8 +23,17 @@ class PhotosListView : Fragment(), PhotosListContract.View {
 
     private lateinit var photosListView: RecyclerView
 
-    override fun setObserver(observer: Observer<PhotosListEvent>)
-            = event.observeForever(observer)
+    private val gridLayoutManager by lazy {
+        GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
+    }
+
+    private val cardLayoutManager by lazy {
+        LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+    }
+
+    override fun setObserver(observer: Observer<PhotosListEvent>) {
+        event.observeForever(observer)
+    }
 
     override fun setAdapter(adapter: ListAdapter<FlickrPhoto, PhotosListAdapter.PhotoViewHolder>) {
         photosListView.adapter = adapter
@@ -30,9 +41,18 @@ class PhotosListView : Fragment(), PhotosListContract.View {
 
     override fun setViewType(type: ViewType) {
         photosListView.layoutManager = when (type) {
-            ViewType.Grid -> GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
-            ViewType.Card -> LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            ViewType.Grid -> gridLayoutManager
+            ViewType.Card -> cardLayoutManager
         }
+    }
+
+    override fun openViewer(photos: List<FlickrPhoto>, position: Int) {
+        val intent = Intent(activity, ViewerActivity::class.java).apply {
+            putParcelableArrayListExtra("photos", ArrayList(photos))
+            putExtra("position", position)
+        }
+        startActivity(intent)
+        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
     override fun onStart() {
