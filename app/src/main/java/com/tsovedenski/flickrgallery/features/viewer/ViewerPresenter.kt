@@ -2,7 +2,6 @@ package com.tsovedenski.flickrgallery.features.viewer
 
 import androidx.viewpager.widget.PagerAdapter
 import com.tsovedenski.flickrgallery.common.CoroutineContextProvider
-import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 import com.tsovedenski.flickrgallery.features.common.Presenter
 
 /**
@@ -12,7 +11,6 @@ class ViewerPresenter (
     private val view: ViewerContract.View,
     private val model: ViewerContract.ViewModel,
     private val adapter: PagerAdapter,
-    private val photos: List<FlickrPhoto>,
     private val initialPosition: Int,
     contextProvider: CoroutineContextProvider
 ) : Presenter<ViewerEvent>(contextProvider) {

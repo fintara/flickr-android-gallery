@@ -59,6 +59,33 @@ class PhotosListPresenterTest {
         presenter.onChanged(PhotosListEvent.OnResume)
 
         verify(inverse = true) { model.setLoaded(true) }
+        coVerify(inverse = true) { service.getPhotos() }
+    }
+
+    @Test
+    fun restoresOnResumeWhenLoaded() {
+        every { model.isLoaded() } returns true
+        runRestoreTest()
+    }
+
+    @Test
+    fun restoresOnResumeWhenNotLoaded() {
+        every { model.isLoaded() } returns false
+        runRestoreTest()
+    }
+
+    private fun runRestoreTest() {
+        val list = listOf(getFlickrPhoto())
+
+        every { model.getPhotos() } returns list
+        every { model.getViewType() } returns ViewType.Card
+        coEvery { service.getPhotos() } returns list
+
+        presenter.onChanged(PhotosListEvent.OnResume)
+
+        verify { view.setViewType(ViewType.Card) }
+        verify { adapter.submitList(list) }
+        verify { view.restoreScrollPosition() }
     }
 
     private fun getFlickrPhoto() = FlickrPhoto(

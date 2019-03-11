@@ -17,7 +17,6 @@ class ViewerInjector (
             view,
             ViewModelProviders.of(view).get(ViewerViewModel::class.java),
             ViewerAdapter(photos),
-            photos,
             position,
             CoroutineContextProviderImpl
         )
