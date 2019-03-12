@@ -76,10 +76,9 @@ class PhotosListPresenterTest {
 
     @Test
     fun restoresOnResumeWhenLoaded() {
-        every { model.isLoaded() } returns true
-
         val list = listOf(getFlickrPhoto())
 
+        every { model.isLoaded() } returns true
         every { model.getPhotos() } returns list
         every { model.getViewType() } returns ViewType.Card
         coEvery { service.getPhotos() } returns list
@@ -89,6 +88,41 @@ class PhotosListPresenterTest {
         verify { view.setViewType(ViewType.Card) }
         verify { adapter.submitList(list) }
         verify { view.restoreScrollPosition() }
+    }
+
+    @Test
+    fun searchTriggersLoadingPhotos() {
+        val list = listOf(getFlickrPhoto())
+        val query = "test"
+
+        every { model.getSearchQuery() } returnsMany listOf("", query)
+
+        presenter.onChanged(PhotosListEvent.OnSearchQuery(query))
+
+        coVerify { service.getPhotos(query) }
+    }
+
+    @Test
+    fun searchDoesntTriggerLoadingIfQuerySame() {
+        val query = "test"
+
+        every { model.getSearchQuery() } returns query
+
+        presenter.onChanged(PhotosListEvent.OnSearchQuery(query))
+
+        coVerify(inverse = true) { service.getPhotos(any()) }
+        verify(inverse = true) { adapter.submitList(any()) }
+    }
+
+    @Test
+    fun searchEventOpensSearchDialogWithQuery() {
+        val query = "test123"
+        
+        every { model.getSearchQuery() } returns query
+
+        presenter.onChanged(PhotosListEvent.OnSearch)
+
+        verify { view.openSearch(query) }
     }
 
     private fun getFlickrPhoto() = FlickrPhoto(

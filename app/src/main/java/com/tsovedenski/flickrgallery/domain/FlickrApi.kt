@@ -2,11 +2,12 @@ package com.tsovedenski.flickrgallery.domain
 
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface FlickrApi {
 
     @GET("/services/feeds/photos_public.gne?format=json&nojsoncallback=1")
-    fun getPublicFeedAsync(): Deferred<Response>
+    fun getPublicFeedAsync(@Query("tags") query: String): Deferred<Response>
 }
 
 data class Response (

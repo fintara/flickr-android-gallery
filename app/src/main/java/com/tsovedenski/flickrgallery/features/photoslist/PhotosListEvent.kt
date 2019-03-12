@@ -8,6 +8,8 @@ sealed class PhotosListEvent {
     object OnResume : PhotosListEvent()
     object OnDestroy : PhotosListEvent()
     object OnRefresh : PhotosListEvent()
+    object OnSearch : PhotosListEvent()
+    data class OnSearchQuery(val query: String) : PhotosListEvent()
     data class OnPhotoSelected(val position: Int) : PhotosListEvent()
     object ChangeViewToGridLayout : PhotosListEvent()
     object ChangeViewToCardLayout : PhotosListEvent()

@@ -13,8 +13,8 @@ class FlickrService (
     private val sourceFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
     private val format = SimpleDateFormat("dd MMMM YYYY, HH:mm", Locale.ENGLISH)
 
-    suspend fun getPhotos(): List<FlickrPhoto> {
-        val response = api.getPublicFeedAsync().await()
+    suspend fun getPhotos(query: String = ""): List<FlickrPhoto> {
+        val response = api.getPublicFeedAsync(query).await()
         return response.items.map { FlickrPhoto(
             title = with(it.title.trim()) { if (isBlank()) "Untitled" else this },
             date = format.format(sourceFormat.parse(it.published)),

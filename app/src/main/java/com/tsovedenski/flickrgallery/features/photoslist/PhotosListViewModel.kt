@@ -10,7 +10,8 @@ import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 class PhotosListViewModel (
     private val loaded: MutableLiveData<Boolean> = MutableLiveData(),
     private val photos: MutableLiveData<List<FlickrPhoto>> = MutableLiveData(),
-    private val viewType: MutableLiveData<ViewType> = MutableLiveData()
+    private val viewType: MutableLiveData<ViewType> = MutableLiveData(),
+    private val searchQuery: MutableLiveData<String> = MutableLiveData()
 ) : ViewModel(),
     PhotosListContract.ViewModel {
 
@@ -18,6 +19,7 @@ class PhotosListViewModel (
         loaded.value = false
         photos.value = emptyList()
         viewType.value = ViewType.Grid
+        searchQuery.value = ""
     }
 
     override fun isLoaded(): Boolean {
@@ -44,4 +46,11 @@ class PhotosListViewModel (
         viewType.value = type
     }
 
+    override fun getSearchQuery(): String {
+        return searchQuery.value!!
+    }
+
+    override fun setSearchQuery(value: String) {
+        searchQuery.value = value
+    }
 }

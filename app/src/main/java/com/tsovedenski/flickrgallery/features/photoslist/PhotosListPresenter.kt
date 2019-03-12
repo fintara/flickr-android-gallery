@@ -27,6 +27,8 @@ class PhotosListPresenter (
         PhotosListEvent.ChangeViewToGridLayout -> changeViewType(ViewType.Grid)
         PhotosListEvent.ChangeViewToCardLayout -> changeViewType(ViewType.Card)
         is PhotosListEvent.OnPhotoSelected -> onPhotoSelected(e.position)
+        PhotosListEvent.OnSearch -> onSearch()
+        is PhotosListEvent.OnSearchQuery -> onSearchQuery(e.query)
     }
 
     private fun onStart() {
@@ -48,7 +50,7 @@ class PhotosListPresenter (
     private fun loadPhotos() = launch {
         view.showLoading()
 
-        val result = Try(service::getPhotos)
+        val result = Try { service.getPhotos(model.getSearchQuery()) }
 
         result.fold(
             left = {
@@ -85,6 +87,22 @@ class PhotosListPresenter (
             model.getPhotos(),
             position
         )
+    }
+
+    private fun onSearch() {
+        view.openSearch(model.getSearchQuery())
+    }
+
+    private fun onSearchQuery(query: String) {
+        val current = model.getSearchQuery()
+        val updated = query.trim()
+
+        if (current != updated) {
+            model.setSearchQuery(updated)
+            view.showLoading()
+            adapter.submitList(emptyList())
+            loadPhotos()
+        }
     }
 
     private fun restore() {

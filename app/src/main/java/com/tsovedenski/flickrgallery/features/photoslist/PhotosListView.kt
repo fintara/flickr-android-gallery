@@ -1,9 +1,14 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
+import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.InputType
 import android.view.*
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -77,6 +82,30 @@ class PhotosListView : Fragment(), PhotosListContract.View {
         activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
+    override fun openSearch(initialQuery: String) {
+        AlertDialog.Builder(activity as Activity).apply {
+            setTitle(R.string.search_tags)
+
+            val input = EditText(activity)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            input.setText(initialQuery)
+
+            setView(input)
+
+            setPositiveButton(R.string.go, DialogInterface.OnClickListener { dialog, which ->
+                event.value = PhotosListEvent.OnSearchQuery(input.text.toString())
+            })
+
+            setNeutralButton(R.string.clear, DialogInterface.OnClickListener { dialog, which ->
+                event.value = PhotosListEvent.OnSearchQuery("")
+            })
+
+            setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, which ->
+                dialog.cancel()
+            })
+        }.show()
+    }
+
     override fun onStart() {
         super.onStart()
         event.value = PhotosListEvent.OnStart
@@ -120,6 +149,7 @@ class PhotosListView : Fragment(), PhotosListContract.View {
             R.id.viewtype_grid -> { event.value = PhotosListEvent.ChangeViewToGridLayout; true }
             R.id.viewtype_card -> { event.value = PhotosListEvent.ChangeViewToCardLayout; true }
             R.id.refresh -> { event.value = PhotosListEvent.OnRefresh; true }
+            R.id.search_tags -> { event.value = PhotosListEvent.OnSearch; true }
             else -> false
         }
     }

@@ -15,6 +15,7 @@ interface PhotosListContract {
         fun setViewType(type: ViewType)
         fun restoreScrollPosition()
         fun openViewer(photos: List<FlickrPhoto>, position: Int)
+        fun openSearch(initialQuery: String)
         fun showMessage(@StringRes resId: Int)
         fun showLoading()
         fun hideLoading()
@@ -27,6 +28,8 @@ interface PhotosListContract {
         fun setPhotos(list: List<FlickrPhoto>)
         fun getViewType(): ViewType
         fun setViewType(type: ViewType)
+        fun getSearchQuery(): String
+        fun setSearchQuery(value: String)
     }
 }
 
