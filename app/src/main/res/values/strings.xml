@@ -9,4 +9,6 @@
     <string name="refresh">Refresh</string>
     <string name="as_grid">As grid</string>
     <string name="as_cards">As cards</string>
+
+    <string name="error_could_not_load">Error: Could not load the photos</string>
 </resources>

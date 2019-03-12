@@ -1,5 +1,6 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ListAdapter
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
@@ -14,6 +15,7 @@ interface PhotosListContract {
         fun setViewType(type: ViewType)
         fun restoreScrollPosition()
         fun openViewer(photos: List<FlickrPhoto>, position: Int)
+        fun showMessage(@StringRes resId: Int)
     }
 
     interface ViewModel {

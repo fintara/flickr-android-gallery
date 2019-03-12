@@ -36,7 +36,6 @@ class PhotosListPresenterTest {
     fun setup() {
         clearAllMocks()
         every { contextProvider.provide() } returns Dispatchers.Unconfined
-        every { model.getPhotos() } returns emptyList()
     }
 
     @Test
@@ -50,6 +49,7 @@ class PhotosListPresenterTest {
 
         verify { model.setLoaded(true) }
         verify { model.setPhotos(list) }
+        verify { adapter.submitList(list) }
     }
 
     @Test
@@ -63,18 +63,21 @@ class PhotosListPresenterTest {
     }
 
     @Test
-    fun restoresOnResumeWhenLoaded() {
-        every { model.isLoaded() } returns true
-        runRestoreTest()
+    fun showsMessageOnLoadError() {
+        every { model.isLoaded() } returns false
+        coEvery { service.getPhotos() } throws RuntimeException()
+
+        presenter.onChanged(PhotosListEvent.OnResume)
+
+        verify { view.showMessage(R.string.error_could_not_load) }
+        verify(inverse = true) { adapter.submitList(any()) }
+        verify(inverse = true) { model.setPhotos(any()) }
     }
 
     @Test
-    fun restoresOnResumeWhenNotLoaded() {
-        every { model.isLoaded() } returns false
-        runRestoreTest()
-    }
-
-    private fun runRestoreTest() {
+    fun restoresOnResumeWhenLoaded() {
+        every { model.isLoaded() } returns true
+        
         val list = listOf(getFlickrPhoto())
 
         every { model.getPhotos() } returns list

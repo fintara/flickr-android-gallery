@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tsovedenski.flickrgallery.R
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 import com.tsovedenski.flickrgallery.features.viewer.ViewerActivity
+import com.tsovedenski.flickrgallery.showToast
 
 /**
  * Created by Tsvetan Ovedenski on 10/03/19.
@@ -52,6 +53,10 @@ class PhotosListView : Fragment(), PhotosListContract.View {
         if (layoutManagerState != null) {
             photosListView.layoutManager?.onRestoreInstanceState(layoutManagerState)
         }
+    }
+
+    override fun showMessage(resId: Int) {
+        showToast(resId)
     }
 
     override fun openViewer(photos: List<FlickrPhoto>, position: Int) {

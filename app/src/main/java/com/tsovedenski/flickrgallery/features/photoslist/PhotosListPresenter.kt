@@ -1,5 +1,6 @@
 package com.tsovedenski.flickrgallery.features.photoslist
 
+import com.tsovedenski.flickrgallery.R
 import com.tsovedenski.flickrgallery.common.CoroutineContextProvider
 import com.tsovedenski.flickrgallery.common.Try
 import com.tsovedenski.flickrgallery.domain.FlickrService
@@ -35,9 +36,10 @@ class PhotosListPresenter (
     }
 
     private fun onResume() {
-        restore()
-
-        if (!model.isLoaded()) {
+        if (model.isLoaded()) {
+            restore()
+        } else {
+            changeViewType(model.getViewType())
             loadPhotos()
         }
     }
@@ -46,7 +48,10 @@ class PhotosListPresenter (
         val result = Try(service::getPhotos)
 
         result.fold(
-            left = { println("TODO: Error") },
+            left = {
+                model.setLoaded(false)
+                view.showMessage(R.string.error_could_not_load)
+            },
             right = {
                 model.setLoaded(true)
                 setPhotos(it)
