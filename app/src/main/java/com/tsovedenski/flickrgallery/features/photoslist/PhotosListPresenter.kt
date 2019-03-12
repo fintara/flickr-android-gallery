@@ -33,6 +33,7 @@ class PhotosListPresenter (
         adapter.setObserver(this)
         view.setAdapter(adapter)
         view.setObserver(this)
+        view.showLoading()
     }
 
     private fun onResume() {
@@ -45,6 +46,8 @@ class PhotosListPresenter (
     }
 
     private fun loadPhotos() = launch {
+        view.showLoading()
+
         val result = Try(service::getPhotos)
 
         result.fold(
@@ -57,6 +60,8 @@ class PhotosListPresenter (
                 setPhotos(it)
             }
         )
+
+        view.hideLoading()
     }
 
     private fun setPhotos(list: List<FlickrPhoto>) {
@@ -83,6 +88,7 @@ class PhotosListPresenter (
     }
 
     private fun restore() {
+        view.hideLoading()
         setPhotos(model.getPhotos())
         changeViewType(model.getViewType())
         view.restoreScrollPosition()

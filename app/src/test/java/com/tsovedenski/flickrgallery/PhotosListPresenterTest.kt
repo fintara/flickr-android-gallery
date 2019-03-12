@@ -77,7 +77,7 @@ class PhotosListPresenterTest {
     @Test
     fun restoresOnResumeWhenLoaded() {
         every { model.isLoaded() } returns true
-        
+
         val list = listOf(getFlickrPhoto())
 
         every { model.getPhotos() } returns list

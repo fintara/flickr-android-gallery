@@ -16,6 +16,8 @@ interface PhotosListContract {
         fun restoreScrollPosition()
         fun openViewer(photos: List<FlickrPhoto>, position: Int)
         fun showMessage(@StringRes resId: Int)
+        fun showLoading()
+        fun hideLoading()
     }
 
     interface ViewModel {

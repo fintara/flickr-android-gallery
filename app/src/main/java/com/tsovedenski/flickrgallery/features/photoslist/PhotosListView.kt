@@ -15,6 +15,7 @@ import com.tsovedenski.flickrgallery.R
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
 import com.tsovedenski.flickrgallery.features.viewer.ViewerActivity
 import com.tsovedenski.flickrgallery.showToast
+import kotlinx.android.synthetic.main.fragment_photos_list.*
 
 /**
  * Created by Tsvetan Ovedenski on 10/03/19.
@@ -22,8 +23,6 @@ import com.tsovedenski.flickrgallery.showToast
 class PhotosListView : Fragment(), PhotosListContract.View {
 
     private val event = MutableLiveData<PhotosListEvent>()
-
-    private lateinit var photosListView: RecyclerView
 
     private val gridLayoutManager by lazy {
         GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
@@ -38,12 +37,12 @@ class PhotosListView : Fragment(), PhotosListContract.View {
     }
 
     override fun setAdapter(adapter: ListAdapter<FlickrPhoto, PhotosListAdapter.PhotoViewHolder>) {
-        photosListView.adapter = adapter
+        photos_list.adapter = adapter
 
     }
 
     override fun setViewType(type: ViewType) {
-        photosListView.layoutManager = when (type) {
+        photos_list.layoutManager = when (type) {
             ViewType.Grid -> gridLayoutManager
             ViewType.Card -> cardLayoutManager
         }
@@ -51,12 +50,22 @@ class PhotosListView : Fragment(), PhotosListContract.View {
 
     override fun restoreScrollPosition() {
         if (layoutManagerState != null) {
-            photosListView.layoutManager?.onRestoreInstanceState(layoutManagerState)
+            photos_list.layoutManager?.onRestoreInstanceState(layoutManagerState)
         }
     }
 
     override fun showMessage(resId: Int) {
         showToast(resId)
+    }
+
+    override fun showLoading() {
+        photos_list.visibility = View.INVISIBLE
+        spinner.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        photos_list.visibility = View.VISIBLE
+        spinner.visibility = View.GONE
     }
 
     override fun openViewer(photos: List<FlickrPhoto>, position: Int) {
@@ -79,7 +88,7 @@ class PhotosListView : Fragment(), PhotosListContract.View {
     }
 
     override fun onPause() {
-        layoutManagerState = photosListView.layoutManager?.onSaveInstanceState()
+        layoutManagerState = photos_list.layoutManager?.onSaveInstanceState()
         super.onPause()
     }
 
@@ -89,11 +98,7 @@ class PhotosListView : Fragment(), PhotosListContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_photos_list, container, false)
-
-        photosListView = view.findViewById(R.id.photos_list)
-
-        return view
+        return inflater.inflate(R.layout.fragment_photos_list, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
