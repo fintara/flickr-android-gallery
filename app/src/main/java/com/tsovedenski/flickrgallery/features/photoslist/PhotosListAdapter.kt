@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tsovedenski.flickrgallery.GlideApp
 import com.tsovedenski.flickrgallery.R
 import com.tsovedenski.flickrgallery.domain.models.FlickrPhoto
@@ -46,6 +47,12 @@ class PhotosListAdapter (
     }
 
     sealed class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        protected fun createSpinner(context: Context) = CircularProgressDrawable(context).apply {
+            strokeWidth = 3f
+            centerRadius = 30f
+            start()
+        }
+
         abstract fun bindTo(
             item: FlickrPhoto,
             position: Int,
@@ -56,6 +63,7 @@ class PhotosListAdapter (
         protected fun ImageView.load(url: String, context: Context) = GlideApp
             .with(context)
             .load(url)
+            .placeholder(createSpinner(context))
             .into(this)
 
         class GridViewHolder(view: View) : PhotoViewHolder(view) {
